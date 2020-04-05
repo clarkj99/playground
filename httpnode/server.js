@@ -16,7 +16,7 @@ const pool = new pg.Pool(config);
 
 pool.connect((err, client, done) => {
     if (err) throw err;
-    client.query('SELECT * FROM users, profiles WHERE users.id=profiles.user_id', (err, res) => {
+    client.query('SELECT  FROM users, profiles WHERE users.id=profiles.user_id', (err, res) => {
         if (err)
             console.log(err.stack);
         else {
