@@ -1,30 +1,32 @@
 const http = require('http')
 const services = require('./services')
-const pg = require('pg')
-const express = require('express')
+// const pg = require('pg')
+// const express = require('express')
+const jsonBody = require('body/json');
+
 
 const url = require('url')
 
 
 const server = http.createServer();
 
-const config = {
-    database: 'backend_development', //env var: PGDATABASE
-};
+// const config = {
+//     database: 'backend_development', //env var: PGDATABASE
+// };
 
-const pool = new pg.Pool(config);
+// const pool = new pg.Pool(config);
 
-pool.connect((err, client, done) => {
-    if (err) throw err;
-    client.query('SELECT  FROM users, profiles WHERE users.id=profiles.user_id', (err, res) => {
-        if (err)
-            console.log(err.stack);
-        else {
-            console.log(res.rows);
-        }
-        pool.end()
-    })
-})
+// pool.connect((err, client, done) => {
+//     if (err) throw err;
+//     client.query('SELECT  FROM users, profiles WHERE users.id=profiles.user_id', (err, res) => {
+//         if (err)
+//             console.log(err.stack);
+//         else {
+//             console.log(res.rows);
+//         }
+//         pool.end()
+//     })
+// })
 
 server.on('request', (req, res) => {
     const parsedUrl = url.parse(req.url, true);
@@ -33,6 +35,13 @@ server.on('request', (req, res) => {
         const metadata = services.fetchImageMetadata(id)
         console.log(req.headers);
     }
+    jsonBody(req, req, (err, body) => {
+        if (err) {
+            console.log(err);
+        } else {
+            services.createUser(body['userName']);
+        }
+    })
 })
 
 server.listen(8080);
