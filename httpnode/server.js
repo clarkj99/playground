@@ -33,15 +33,25 @@ server.on('request', (req, res) => {
     if (req.method === 'GET' && parsedUrl.pathname === '/metadata') {
         const { id } = parsedUrl.query;
         const metadata = services.fetchImageMetadata(id)
+        res.setHeader('Content-Type', 'application:json');
+        res.statusCode = 200
         console.log(req.headers);
+        const serializedJSON = JSON.stringify(metadata)
+        res.write(serializedJSON)
+        res.end()
+    } else if (req.method === 'POST' && parsedUrl.pathname === '/users') {
+        jsonBody(req, req, (err, body) => {
+            if (err) {
+                console.log(err);
+            } else {
+                services.createUser(body['userName']);
+            }
+        })
+    } else {
+        res.statusCode = 404;
+        res.setHeader('X-Powered-By', 'Node')
+        res.end()
     }
-    jsonBody(req, req, (err, body) => {
-        if (err) {
-            console.log(err);
-        } else {
-            services.createUser(body['userName']);
-        }
-    })
 })
 
 server.listen(8080);
