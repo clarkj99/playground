@@ -1,6 +1,22 @@
 const http = require('http')
+
+const data = JSON.stringify({
+    userName: 'Soren'
+})
+
+const options = {
+    hostnamme: 'localhost',
+    port: 8080,
+    path: ('/users'),
+    method: 'POST',
+    headers: {
+        'Content_Type': 'application/json',
+        'Content-Length': data.length
+    }
+}
+
 const request = http.request(
-    { hostname: 'www.google.com' },
+    options,
     (response) => {
         console.log(`statusCode:${response.statusCode}`);
         console.log((response.headers));
@@ -15,5 +31,7 @@ const request = http.request(
 request.on('error', err => {
     console.log(err);
 })
+
+request.write(data)
 
 request.end()
